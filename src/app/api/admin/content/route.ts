@@ -24,6 +24,7 @@ import {
   renderRealizations,
   renderReviews,
 } from "@/lib/admin/serialize";
+import { requestRebuild } from "@/lib/admin/rebuild";
 import { writeProjectFile } from "@/lib/admin/write";
 import {
   assertBenefits,
@@ -89,7 +90,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const section = String(body.section ?? "");
     const written = await saveSection(section, body.data);
-    return NextResponse.json({ ok: true, file: written });
+    const rebuild = await requestRebuild();
+    return NextResponse.json({ ok: true, file: written, rebuild });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Nie udało się zapisać.";
     return NextResponse.json({ error: message }, { status: 400 });

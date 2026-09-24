@@ -4,6 +4,7 @@ import { images } from "@/data/images";
 import { realizations } from "@/data/realizations";
 import { denied, devOnly, passwordOk } from "@/lib/admin/guard";
 import { assertImagePath } from "@/lib/admin/validate";
+import { requestRebuild } from "@/lib/admin/rebuild";
 import { writeImageFile } from "@/lib/admin/write";
 
 export const runtime = "nodejs";
@@ -23,7 +24,8 @@ export async function POST(request: Request) {
     const input = Buffer.from(await file.arrayBuffer());
     const webp = await sharp(input).rotate().webp({ quality: 82 }).toBuffer();
     await writeImageFile(destination, webp);
-    return NextResponse.json({ ok: true, file: destination });
+    const rebuild = await requestRebuild();
+    return NextResponse.json({ ok: true, file: destination, rebuild });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Nie udało się zapisać grafiki.";
     return NextResponse.json({ error: message }, { status: 400 });

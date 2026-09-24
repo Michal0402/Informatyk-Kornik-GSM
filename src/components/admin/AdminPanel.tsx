@@ -81,7 +81,7 @@ export function AdminPanel() {
         setError(body.error ?? "Zapis nie powiódł się.");
         return;
       }
-      const notice = `Zapisano ${body.file}`;
+      const notice = body.rebuild ? `Zapisano ${body.file}. Strona przebudowuje się.` : `Zapisano ${body.file}`;
       sessionStorage.setItem("admin-notice", notice);
       sessionStorage.setItem("admin-saved-until", String(Date.now() + 1800));
       setMessage(notice);
@@ -119,7 +119,7 @@ export function AdminPanel() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-24 pb-40">
       <h1 className="font-display text-3xl font-semibold">Panel treści</h1>
-      <p className="mt-2 text-sm text-muted">Zapisuje pliki w projekcie. Działa tylko przy lokalnym serwerze.</p>
+      <p className="mt-2 text-sm text-muted">Zapisuje pliki w projekcie. Na serwerze strona przebudowuje się po zapisie.</p>
       <div className="mt-6 flex flex-wrap gap-2">
         {tabs.map((item) => (
           <button

@@ -2,8 +2,8 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 
 export function devOnly(): NextResponse | null {
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json({ error: "Panel jest wyłączony." }, { status: 404 });
+  if (!process.env.ADMIN_PASSWORD) {
+    return NextResponse.json({ error: "Panel jest niedostępny." }, { status: 404 });
   }
   return null;
 }
